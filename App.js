@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, StatusBar, StyleSheet} from 'react-native';
+import {StatusBar, StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Colors from './src/theme/colors';
@@ -27,7 +27,7 @@ const App = () => {
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: Colors.background,
+    backgroundColor: Colors.header,
   },
   headerText: {
     color: Colors.white,
