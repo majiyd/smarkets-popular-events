@@ -1,13 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  StyleSheet,
-  ActivityIndicator,
-  Alert,
-  FlatList,
-} from 'react-native';
+import {View, StyleSheet, Alert, FlatList} from 'react-native';
 import BaseText from '../components/BaseText';
 import EventItem from '../components/EventItem';
+import Loader from '../components/Loader';
 import Colors from '../theme/colors';
 
 const Home = ({navigation}) => {
@@ -41,7 +36,6 @@ const Home = ({navigation}) => {
     } catch (error) {
       setLoading(false);
       Alert.alert('Error', 'Failed to fetch top events');
-      console.log('error', error);
     }
   };
 
@@ -54,9 +48,7 @@ const Home = ({navigation}) => {
         Top Events Today
       </BaseText>
       {loading ? (
-        <View style={styles.loader}>
-          <ActivityIndicator size="large" color={Colors.white} />
-        </View>
+        <Loader />
       ) : (
         <View style={styles.content}>
           <BaseText>
@@ -85,11 +77,6 @@ const styles = StyleSheet.create({
   },
   headerText: {
     marginVertical: 20,
-  },
-  loader: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   content: {
     flex: 1,
