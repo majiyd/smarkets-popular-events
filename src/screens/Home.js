@@ -44,6 +44,10 @@ const Home = ({navigation}) => {
       console.log('error', error);
     }
   };
+
+  const onCardPress = item => {
+    navigation.navigate('Event', {item});
+  };
   return (
     <View style={styles.background}>
       <BaseText type="header" style={styles.headerText}>
@@ -62,7 +66,9 @@ const Home = ({navigation}) => {
             <FlatList
               data={events}
               keyExtractor={item => item.id}
-              renderItem={({item}) => <EventItem item={item} />}
+              renderItem={({item}) => (
+                <EventItem item={item} onPress={() => onCardPress({item})} />
+              )}
             />
           </View>
         </View>
