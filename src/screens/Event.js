@@ -1,9 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {View, StyleSheet, Alert} from 'react-native';
 import Colors from '../theme/colors';
 import moment from 'moment';
 import BaseText from '../components/BaseText';
 import Loader from '../components/Loader';
+import {getStateColor} from '../utils';
 
 const Event = ({navigation, route}) => {
   const {short_name, start_datetime, state, name, parent_id} =
@@ -17,10 +18,9 @@ const Event = ({navigation, route}) => {
   useEffect(() => {
     getParentInfo();
     navigation.setOptions({headerTitle: short_name});
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [getParentInfo, navigation, short_name]);
 
-  const getParentInfo = async () => {
+  const getParentInfo = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch(
@@ -29,8 +29,6 @@ const Event = ({navigation, route}) => {
 
       const parentObject = await response.json();
 
-      console.log('parentObject', parentObject);
-
       setParentInfo(parentObject.events[0] || {});
 
       setLoading(false);
@@ -38,7 +36,7 @@ const Event = ({navigation, route}) => {
       setLoading(false);
       Alert.alert('Error', 'Failed to fetch event info');
     }
-  };
+  }, [parent_id]);
 
   return (
     <View style={styles.background}>
@@ -47,9 +45,16 @@ const Event = ({navigation, route}) => {
         <Loader />
       ) : (
         <View>
-          <BaseText type="header">{parentName}</BaseText>
-          <BaseText>Start: {moment(start_datetime).format('lll')}</BaseText>
-          <BaseText>{state}</BaseText>
+          <BaseText style={styles.parent}>{parentName}</BaseText>
+          <View style={styles.timeRow}>
+            <BaseText style={styles.time}>
+              {state === 'upcoming' ? 'Starts' : 'Started:'}{' '}
+              {moment(start_datetime).format('MMM d, HH:MM A')}
+            </BaseText>
+            <BaseText style={[styles.state, {color: getStateColor(state)}]}>
+              {state}
+            </BaseText>
+          </View>
         </View>
       )}
     </View>
@@ -61,6 +66,21 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
     flex: 1,
     padding: 20,
+  },
+  parent: {
+    marginTop: 15,
+    marginBottom: 12,
+  },
+  timeRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  state: {
+    fontSize: 14,
+    textTransform: 'capitalize',
+  },
+  time: {
+    fontSize: 14,
   },
 });
 export default Event;
