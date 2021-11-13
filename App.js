@@ -1,23 +1,36 @@
 import React from 'react';
-import {SafeAreaView, StatusBar, StyleSheet, View, Text} from 'react-native';
-import Colors from './theme/colors';
+import {SafeAreaView, StatusBar, StyleSheet} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import Colors from './src/theme/colors';
+import Home from './src/screens/Home';
+import EventScreen from './src/screens/Event';
+
+const Stack = createNativeStackNavigator();
 
 const App = () => {
   return (
-    <SafeAreaView style={styles.background}>
+    <NavigationContainer>
       <StatusBar barStyle={'light-content'} />
 
-      <View>
-        <Text>Hi</Text>
-      </View>
-    </SafeAreaView>
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: styles.header,
+          headerTintColor: Colors.white,
+        }}>
+        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Event" component={EventScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 
 const styles = StyleSheet.create({
-  background: {
+  header: {
     backgroundColor: Colors.background,
-    flex: 1,
+  },
+  headerText: {
+    color: Colors.white,
   },
 });
 
